@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 
 function Navbar() {
   const [openMenu, setOpenMenu] = useState(null);
@@ -26,15 +27,27 @@ function Navbar() {
   const navItems = [
     {
       label: "Municipality",
-      submenu: ["Top Level Officer", "Middle Level Officer", "Ground Level Officer"],
+      submenu: [
+        { label: "Top Level Officer", to: "/login" },
+        { label: "Middle Level Officer" },
+        { label: "Ground Level Officer" },
+      ],
     },
     {
       label: "Electricity Department",
-      submenu: ["Top Level Officer", "Middle Level Officer", "Ground Level Officer"],
+      submenu: [
+        { label: "Top Level Officer", to: "/login" },
+        { label: "Middle Level Officer" },
+        { label: "Ground Level Officer" },
+      ],
     },
     {
       label: "Development Authority",
-      submenu: ["Top Level Officer", "Middle Level Officer", "Ground Level Officer"],
+      submenu: [
+        { label: "Top Level Officer", to: "/login" },
+        { label: "Middle Level Officer" },
+        { label: "Ground Level Officer" },
+      ],
     },
   ];
 
@@ -45,7 +58,7 @@ function Navbar() {
         className="relative w-full h-24 flex items-center"
         style={{
           background:
-            "linear-gradient(180deg, #fdd18fff 0%, #FFF 50%, #aae3acff 100%)",
+            "linear-gradient(100deg, #fdd18fff 0%, #FFF 50%, #aae3acff 100%)",
         }}
       >
         {/* Background image */}
@@ -85,7 +98,9 @@ function Navbar() {
       <nav className="w-full bg-[#124072] h-10 flex items-center text-white font-ubuntu text-sm font-medium px-16 relative z-20">
         <ul className="flex items-center w-full">
           {/* Home */}
-          <li className="hover:text-[#FFA726] cursor-pointer">Home</li>
+          <li className="hover:text-[#FFA726] cursor-pointer">
+            <Link to="/">Home</Link>
+          </li>
           <img src="/whiteline.svg" alt="|" className="mx-5 h-5 w-auto" />
 
           {/* Dropdown Menus */}
@@ -114,7 +129,11 @@ function Navbar() {
                                  hover:bg-[#f5f5f5] hover:text-[#F57C00] 
                                  transition-colors duration-200 rounded-md"
                     >
-                      {sub}
+                      {sub.to ? (
+                        <Link to={sub.to} className="block w-full h-full">{sub.label}</Link>
+                      ) : (
+                        sub.label
+                      )}
                     </li>
                   ))}
                 </ul>

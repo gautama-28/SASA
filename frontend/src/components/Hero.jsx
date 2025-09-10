@@ -4,7 +4,7 @@ import React from 'react';
 function Hero() {
   return (
     <section className="w-full">
-      <img src="./HeroImage.png" alt="Hero Banner" className="w-auto h-auto" />
+      <img src="/HeroImage.png" alt="Hero Banner" className="w-auto h-auto" />
       {/* Info Section */}
       <div className="bg-white py-8 px-6 md:px-16">
         <div className="max-w-3xl mx-auto">
