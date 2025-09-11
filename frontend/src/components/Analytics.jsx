@@ -1,9 +1,106 @@
-import React from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 function Analytics() {
+  // Dropdown state and outside-click handling
+  const [csvMenuOpen, setCsvMenuOpen] = useState(false)
+  const menuRef = useRef(null)
+
+  useEffect(() => {
+    function onDocClick(e) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setCsvMenuOpen(false)
+      }
+    }
+    function onEsc(e) {
+      if (e.key === 'Escape') setCsvMenuOpen(false)
+    }
+    document.addEventListener('mousedown', onDocClick)
+    document.addEventListener('keydown', onEsc)
+    return () => {
+      document.removeEventListener('mousedown', onDocClick)
+      document.removeEventListener('keydown', onEsc)
+    }
+  }, [])
+
+  // Sample reports data (replace with real data when backend is ready)
+  const reports = useMemo(
+    () => [
+      { id: 1001, title: 'Pothole near Main St', category: 'Road', status: 'Open', createdAt: '2025-09-10T10:12:00Z' },
+      { id: 1002, title: 'Streetlight not working', category: 'Utilities', status: 'In Progress', createdAt: '2025-09-04T18:45:00Z' },
+      { id: 1003, title: 'Overflowing trash bin', category: 'Sanitation', status: 'Resolved', createdAt: '2025-08-28T07:30:00Z' },
+      { id: 1004, title: 'Water leakage report', category: 'Utilities', status: 'Open', createdAt: '2025-09-01T12:20:00Z' },
+      { id: 1005, title: 'Broken bench in park', category: 'Parks', status: 'Resolved', createdAt: '2025-09-08T09:00:00Z' },
+    ],
+    []
+  )
+
+  function isWithinLastDays(dateISO, days) {
+    const d = new Date(dateISO)
+    const now = new Date()
+    const ms = days * 24 * 60 * 60 * 1000
+    return now - d <= ms
+  }
+
+  function isWithinThisMonth(dateISO) {
+    const d = new Date(dateISO)
+    const now = new Date()
+    return d.getUTCFullYear() === now.getUTCFullYear() && d.getUTCMonth() === now.getUTCMonth()
+  }
+
+  function toCSV(rows) {
+    if (!rows || rows.length === 0) return 'id,title,category,status,createdAt\n'
+    const headers = Object.keys(rows[0])
+    const escape = (v) => {
+      if (v == null) return ''
+      const s = String(v)
+      if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"'
+      return s
+    }
+    const lines = [headers.join(',')]
+    for (const r of rows) {
+      lines.push(headers.map((h) => escape(r[h])).join(','))
+    }
+    return lines.join('\n') + '\n'
+  }
+
+  function downloadCSV(rows, filename) {
+    const csv = toCSV(rows)
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = filename
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
+  function handleExport(range) {
+    let filtered = reports
+    const nowStr = new Date().toISOString().slice(0, 10)
+    switch (range) {
+      case '7d':
+        filtered = reports.filter((r) => isWithinLastDays(r.createdAt, 7))
+        downloadCSV(filtered, `reports_last_7_days_${nowStr}.csv`)
+        break
+      case '30d':
+        filtered = reports.filter((r) => isWithinLastDays(r.createdAt, 30))
+        downloadCSV(filtered, `reports_last_30_days_${nowStr}.csv`)
+        break
+      case 'month':
+        filtered = reports.filter((r) => isWithinThisMonth(r.createdAt))
+        downloadCSV(filtered, `reports_this_month_${nowStr}.csv`)
+        break
+      default:
+        downloadCSV(filtered, `reports_all_${nowStr}.csv`)
+    }
+    setCsvMenuOpen(false)
+  }
+
   return (
-    <div className="min-h-screen">
-      <header className="flex items-center justify-between border-b border-gray-100 bg-white px-16 pt-6 pb-3">
+    <div className="">
+  <header className="flex items-center justify-between px-16 pt-4 pb-2">
         {/* Left: Title and subtitle */}
         <div>
           <h1 className="font-ubuntu text-xl font-black text-gray-900 md:text-2xl">
@@ -124,6 +221,84 @@ function Analytics() {
               <span className="text-[11px] font-medium text-emerald-600">1.8% Up</span>
               <span className="text-[11px] text-gray-400">from yesterday</span>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* View Reports header with CSV download dropdown */}
+  <section className="mt-6 w-full px-16">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="font-ubuntu text-lg font-bold text-gray-900">View Reports</h2>
+            <p className="font-lato text-sm text-gray-500">Monitor and manage civic issue reports</p>
+          </div>
+
+          <div className="relative" ref={menuRef}>
+            <button
+              type="button"
+              onClick={() => setCsvMenuOpen((o) => !o)}
+              aria-haspopup="menu"
+              aria-expanded={csvMenuOpen}
+              className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            >
+              Download CSV
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                className={`h-4 w-4 transition-transform ${csvMenuOpen ? 'rotate-180' : ''}`}
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+
+            {csvMenuOpen && (
+              <div
+                role="menu"
+                className="absolute right-0 z-20 mt-2 w-56 overflow-hidden rounded-lg border border-gray-100 bg-white py-1 shadow-lg ring-1 ring-black/5"
+              >
+                <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                  Export Range
+                </div>
+                <button
+                  role="menuitem"
+                  onClick={() => handleExport('all')}
+                  className="flex w-full items-center justify-between px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50"
+                >
+                  All reports
+                  <span className="text-[10px] text-gray-400">CSV</span>
+                </button>
+                <button
+                  role="menuitem"
+                  onClick={() => handleExport('7d')}
+                  className="flex w-full items-center justify-between px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50"
+                >
+                  Last 7 days
+                  <span className="text-[10px] text-gray-400">CSV</span>
+                </button>
+                <button
+                  role="menuitem"
+                  onClick={() => handleExport('30d')}
+                  className="flex w-full items-center justify-between px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50"
+                >
+                  Last 30 days
+                  <span className="text-[10px] text-gray-400">CSV</span>
+                </button>
+                <button
+                  role="menuitem"
+                  onClick={() => handleExport('month')}
+                  className="flex w-full items-center justify-between px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50"
+                >
+                  This month
+                  <span className="text-[10px] text-gray-400">CSV</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </section>

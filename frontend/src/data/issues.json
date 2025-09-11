@@ -1,0 +1,53 @@
+{
+  "labels": {
+    "id": "ID",
+    "subject": "Subject",
+    "address": "ADDRESS",
+    "date": "DATE",
+    "priority": "PRIORITY",
+    "status": "STATUS",
+    "report": "REPORT"
+  },
+  "rows": [
+    {
+      "id": "00001",
+      "subject": "Waterloggin",
+      "address": "089 Kutch Green Apt. 448",
+      "date": "2019-09-04T00:00:00Z",
+      "priority": "Highest",
+      "status": "Completed"
+    },
+    {
+      "id": "00002",
+      "subject": "Broken Streetlight",
+      "address": "979 Immanuel Ferry Suite 526",
+      "date": "2019-05-28T00:00:00Z",
+      "priority": "Medium",
+      "status": "Processing"
+    },
+    {
+      "id": "00003",
+      "subject": "Potholes",
+      "address": "8587 Frida Ports",
+      "date": "2019-11-23T00:00:00Z",
+      "priority": "Low",
+      "status": "Rejected"
+    },
+    {
+      "id": "00002",
+      "subject": "Potholes",
+      "address": "979 Immanuel Ferry Suite 526",
+      "date": "2019-05-28T00:00:00Z",
+      "priority": "Medium",
+      "status": "Processing"
+    },
+    {
+      "id": "00003",
+      "subject": "Water Loggin",
+      "address": "8587 Frida Ports",
+      "date": "2019-11-23T00:00:00Z",
+      "priority": "Low",
+      "status": "Rejected"
+    }
+  ]
+}
