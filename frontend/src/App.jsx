@@ -6,6 +6,7 @@ import Hero from "./components/Hero";
 import Footer from "./components/Footer";
 import Login from "./components/Login";
 import Admin from "./components/Admin";
+import Reports from "./components/Reports";
 
 // Shared layout: Navbar at top, Footer at bottom, page content in between
 function Layout() {
@@ -31,6 +32,7 @@ function App() {
         {/* 404 fallback (optional) */}
         <Route path="*" element={<Hero />} />
         <Route path="admin" element={<Admin />} />
+        <Route path="reports" element={<Reports />} />
       </Route>
     </Routes>
   );

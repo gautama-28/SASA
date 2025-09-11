@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 function Analytics() {
   // Dropdown state and outside-click handling
@@ -99,20 +100,71 @@ function Analytics() {
   }
 
   return (
-    <div className="">
-  <header className="flex items-center justify-between px-16 pt-4 pb-2">
-        {/* Left: Title and subtitle */}
-        <div>
-          <h1 className="font-ubuntu text-xl font-black text-gray-900 md:text-2xl">
-            Admin Dashboard
-          </h1>
-          <p className="font-lato text-sm text-gray-500">
-            Manage civic reports and community engagement
-          </p>
-        </div>
+    <div>
+        {/* KPI section: 3/4 width, compact cards */}
+      <div className="flex flex-row py-4 justify-between  px-16 ">
+        <section className="w-3/4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Total Reports */}
+          <div className="relative rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+            <div className="absolute right-3 top-3 grid h-12 w-12 place-content-center rounded-full bg-indigo-50">
+              <img src="/totalReport.svg" alt="Total Reports" />
+            </div>
+            <p className="font-lato text-[11px] text-gray-500">Total Reports</p>
+            <div className="font-ubuntu text-xl font-bold text-gray-900">40,689</div>
+            <div className="mt-2 flex items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3 text-emerald-600"><path fillRule="evenodd" d="M10 3a.75.75 0 01.75.75V14a.75.75 0 01-1.5 0V3.75A.75.75 0 0110 3zm0 0l3.5 3.5a.75.75 0 11-1.06 1.06L10 5.06 7.56 7.56a.75.75 0 11-1.06-1.06L10 3z" clipRule="evenodd"/></svg>
+              <span className="text-[11px] font-medium text-emerald-600">8.5% Up</span>
+              <span className="text-[11px] text-gray-400">from yesterday</span>
+            </div>
+          </div>
 
-        {/* Right: Admin profile with hover dropdown */}
-        <div className="relative group">
+          {/* Active Issues */}
+          <div className="relative rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+            <div className="absolute right-3 top-3 grid h-12 w-12 place-content-center rounded-full bg-yellow-50">
+              <img src="/ActiveIssue.svg" alt="Active Issues" className="h-12 w-12" />
+            </div>
+            <p className="font-lato text-[11px] text-gray-500">Active Issues</p>
+            <div className="font-ubuntu text-xl font-bold text-gray-900">10,293</div>
+            <div className="mt-2 flex items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3 text-emerald-600"><path fillRule="evenodd" d="M10 3a.75.75 0 01.75.75V14a.75.75 0 01-1.5 0V3.75A.75.75 0 0110 3zm0 0l3.5 3.5a.75.75 0 11-1.06 1.06L10 5.06 7.56 7.56a.75.75 0 11-1.06-1.06L10 3z" clipRule="evenodd"/></svg>
+              <span className="text-[11px] font-medium text-emerald-600">1.3% Up</span>
+              <span className="text-[11px] text-gray-400">from past week</span>
+            </div>
+          </div>
+
+          {/* Total Solved */}
+          <div className="relative rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+            <div className="absolute right-3 top-3 grid h-12 w-12 place-content-center rounded-full bg-green-50">
+              <img src="/TotalSolved.svg" alt="Total Solved" className="h-12 w-12" />
+            </div>
+            <p className="font-lato text-[11px] text-gray-500">Total Solved</p>
+            <div className="font-ubuntu text-xl font-bold text-gray-900">$89,000</div>
+            <div className="mt-2 flex items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3 rotate-180 text-rose-600"><path fillRule="evenodd" d="M10 3a.75.75 0 01.75.75V14a.75.75 0 01-1.5 0V3.75A.75.75 0 0110 3zm0 0l3.5 3.5a.75.75 0 11-1.06 1.06L10 5.06 7.56 7.56a.75.75 0 11-1.06-1.06L10 3z" clipRule="evenodd"/></svg>
+              <span className="text-[11px] font-medium text-rose-600">4.3% Down</span>
+              <span className="text-[11px] text-gray-400">from yesterday</span>
+            </div>
+          </div>
+
+          {/* Pending Issues */}
+          <div className="relative rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+            <div className="absolute right-3 top-3 grid h-12 w-12 place-content-center rounded-full bg-orange-50">
+              <img src="/PendingIssue.svg" alt="Pending Issues" className="h-12 w-12" />
+            </div>
+            <p className="font-lato text-[11px] text-gray-500">Pending Issues</p>
+            <div className="font-ubuntu text-xl font-bold text-gray-900">2,040</div>
+            <div className="mt-2 flex items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3 text-emerald-600"><path fillRule="evenodd" d="M10 3a.75.75 0 01.75.75V14a.75.75 0 01-1.5 0V3.75A.75.75 0 0110 3zm0 0l3.5 3.5a.75.75 0 11-1.06 1.06L10 5.06 7.56 7.56a.75.75 0 11-1.06-1.06L10 3z" clipRule="evenodd"/></svg>
+              <span className="text-[11px] font-medium text-emerald-600">1.8% Up</span>
+              <span className="text-[11px] text-gray-400">from yesterday</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      { /* admin */}
+      <div className="relative group">
           {/* Profile summary */}
           <div className="flex items-center gap-3 rounded-full px-2 py-1 transition-colors hover:bg-gray-50 cursor-pointer">
             {/* Avatar (initials) */}
@@ -162,68 +214,7 @@ function Analytics() {
             </button>
           </div>
         </div>
-      </header>
-
-      {/* KPI section: 3/4 width, compact cards */}
-      <section className="w-3/4 px-16">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Total Reports */}
-          <div className="relative rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
-            <div className="absolute right-3 top-3 grid h-8 w-8 place-content-center rounded-full bg-indigo-50">
-              <img src="/totalReport.svg" alt="Total Reports" className="h-12 w-12" />
-            </div>
-            <p className="font-lato text-[11px] text-gray-500">Total Reports</p>
-            <div className="font-ubuntu text-xl font-bold text-gray-900">40,689</div>
-            <div className="mt-2 flex items-center gap-1">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3 text-emerald-600"><path fillRule="evenodd" d="M10 3a.75.75 0 01.75.75V14a.75.75 0 01-1.5 0V3.75A.75.75 0 0110 3zm0 0l3.5 3.5a.75.75 0 11-1.06 1.06L10 5.06 7.56 7.56a.75.75 0 11-1.06-1.06L10 3z" clipRule="evenodd"/></svg>
-              <span className="text-[11px] font-medium text-emerald-600">8.5% Up</span>
-              <span className="text-[11px] text-gray-400">from yesterday</span>
-            </div>
-          </div>
-
-          {/* Active Issues */}
-          <div className="relative rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
-            <div className="absolute right-3 top-3 grid h-8 w-8 place-content-center rounded-full bg-yellow-50">
-              <img src="/ActiveIssue.svg" alt="Active Issues" className="h-12 w-12" />
-            </div>
-            <p className="font-lato text-[11px] text-gray-500">Active Issues</p>
-            <div className="font-ubuntu text-xl font-bold text-gray-900">10,293</div>
-            <div className="mt-2 flex items-center gap-1">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3 text-emerald-600"><path fillRule="evenodd" d="M10 3a.75.75 0 01.75.75V14a.75.75 0 01-1.5 0V3.75A.75.75 0 0110 3zm0 0l3.5 3.5a.75.75 0 11-1.06 1.06L10 5.06 7.56 7.56a.75.75 0 11-1.06-1.06L10 3z" clipRule="evenodd"/></svg>
-              <span className="text-[11px] font-medium text-emerald-600">1.3% Up</span>
-              <span className="text-[11px] text-gray-400">from past week</span>
-            </div>
-          </div>
-
-          {/* Total Solved */}
-          <div className="relative rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
-            <div className="absolute right-3 top-3 grid h-8 w-8 place-content-center rounded-full bg-green-50">
-              <img src="/TotalSolved.svg" alt="Total Solved" className="h-12 w-12" />
-            </div>
-            <p className="font-lato text-[11px] text-gray-500">Total Solved</p>
-            <div className="font-ubuntu text-xl font-bold text-gray-900">$89,000</div>
-            <div className="mt-2 flex items-center gap-1">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3 rotate-180 text-rose-600"><path fillRule="evenodd" d="M10 3a.75.75 0 01.75.75V14a.75.75 0 01-1.5 0V3.75A.75.75 0 0110 3zm0 0l3.5 3.5a.75.75 0 11-1.06 1.06L10 5.06 7.56 7.56a.75.75 0 11-1.06-1.06L10 3z" clipRule="evenodd"/></svg>
-              <span className="text-[11px] font-medium text-rose-600">4.3% Down</span>
-              <span className="text-[11px] text-gray-400">from yesterday</span>
-            </div>
-          </div>
-
-          {/* Pending Issues */}
-          <div className="relative rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
-            <div className="absolute right-3 top-3 grid h-8 w-8 place-content-center rounded-full bg-orange-50">
-              <img src="/PendingIssue.svg" alt="Pending Issues" className="h-12 w-12" />
-            </div>
-            <p className="font-lato text-[11px] text-gray-500">Pending Issues</p>
-            <div className="font-ubuntu text-xl font-bold text-gray-900">2,040</div>
-            <div className="mt-2 flex items-center gap-1">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3 text-emerald-600"><path fillRule="evenodd" d="M10 3a.75.75 0 01.75.75V14a.75.75 0 01-1.5 0V3.75A.75.75 0 0110 3zm0 0l3.5 3.5a.75.75 0 11-1.06 1.06L10 5.06 7.56 7.56a.75.75 0 11-1.06-1.06L10 3z" clipRule="evenodd"/></svg>
-              <span className="text-[11px] font-medium text-emerald-600">1.8% Up</span>
-              <span className="text-[11px] text-gray-400">from yesterday</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      </div>
 
       {/* View Reports header with CSV download dropdown */}
   <section className="mt-6 w-full px-16">
@@ -233,7 +224,24 @@ function Analytics() {
             <p className="font-lato text-sm text-gray-500">Monitor and manage civic issue reports</p>
           </div>
 
-          <div className="relative" ref={menuRef}>
+          <div className="flex items-center gap-3">
+            <Link
+              to="/reports"
+              aria-label="View all reports"
+              className="group inline-flex items-center gap-2 rounded-lg border border-indigo-200 bg-indigo-50/60 px-3 py-1.5 text-sm font-medium text-indigo-700 shadow-sm transition hover:bg-indigo-100 hover:border-indigo-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            >
+              View all reports
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                className="h-4 w-4 text-indigo-600 transition-transform group-hover:translate-x-0.5"
+                aria-hidden="true"
+              >
+                <path fillRule="evenodd" d="M7.22 14.28a.75.75 0 01.02-1.06L10.44 10 7.24 6.78a.75.75 0 111.06-1.06l3.75 3.75a.75.75 0 010 1.06l-3.75 3.75a.75.75 0 01-1.08 0z" clipRule="evenodd" />
+              </svg>
+            </Link>
+            <div className="relative" ref={menuRef}>
             <button
               type="button"
               onClick={() => setCsvMenuOpen((o) => !o)}
@@ -299,6 +307,7 @@ function Analytics() {
                 </button>
               </div>
             )}
+            </div>
           </div>
         </div>
       </section>
