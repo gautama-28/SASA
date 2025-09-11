@@ -15,7 +15,9 @@
       "address": "089 Kutch Green Apt. 448",
       "date": "2019-09-04T00:00:00Z",
       "priority": "Highest",
-      "status": "Completed"
+      "status": "Completed",
+      "lat": 23.3441,
+      "lng": 85.3096
     },
     {
       "id": "00002",
@@ -23,7 +25,9 @@
       "address": "979 Immanuel Ferry Suite 526",
       "date": "2019-05-28T00:00:00Z",
       "priority": "Medium",
-      "status": "Processing"
+      "status": "Processing",
+      "lat": 23.3700,
+      "lng": 85.3300
     },
     {
       "id": "00003",
@@ -31,23 +35,29 @@
       "address": "8587 Frida Ports",
       "date": "2019-11-23T00:00:00Z",
       "priority": "Low",
-      "status": "Rejected"
+      "status": "Rejected",
+      "lat": 23.3550,
+      "lng": 85.2950
     },
     {
-      "id": "00002",
-      "subject": "Potholes",
-      "address": "979 Immanuel Ferry Suite 526",
-      "date": "2019-05-28T00:00:00Z",
-      "priority": "Medium",
-      "status": "Processing"
+      "id": "00004",
+      "subject": "Garbage Collection Delay",
+      "address": "221 Baker Street",
+      "date": "2019-07-15T00:00:00Z",
+      "priority": "High",
+      "status": "Processing",
+      "lat": 23.3600,
+      "lng": 85.3100
     },
     {
-      "id": "00003",
+      "id": "00005",
       "subject": "Water Loggin",
-      "address": "8587 Frida Ports",
-      "date": "2019-11-23T00:00:00Z",
+      "address": "45 Gandhi Nagar",
+      "date": "2019-11-30T00:00:00Z",
       "priority": "Low",
-      "status": "Rejected"
+      "status": "Rejected",
+      "lat": 23.3400,
+      "lng": 85.3200
     }
   ]
 }
