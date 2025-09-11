@@ -30,7 +30,7 @@ function Footer() {
         </div>
         {/* Logo on the right */}
         <div className="flex-shrink-0 flex flex-col items-end ml-12">
-          <img src="/WebsiteLogo.png" alt="Nagar Seva Logo" className="h-16 w-auto mb-2" />
+          <img src="/footerbg.svg" alt="Nagar Seva Logo" className="h-16 w-auto mb-2" />
         </div>
       </div>
       {/* Divider */}
