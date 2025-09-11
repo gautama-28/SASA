@@ -2,7 +2,7 @@ import React from 'react'
 
 function Analytics() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+    <div className="min-h-screen">
       <header className="flex items-center justify-between border-b border-gray-100 bg-white px-16 pt-6 pb-3">
         {/* Left: Title and subtitle */}
         <div>
