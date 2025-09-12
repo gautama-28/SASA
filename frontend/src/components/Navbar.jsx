@@ -27,26 +27,29 @@ function Navbar() {
   const navItems = [
     {
       label: "Municipality",
+      department: "municipality", 
       submenu: [
-        { label: "Top Level Officer", to: "/login" },
-        { label: "Middle Level Officer" },
-        { label: "Ground Level Officer" },
+        { label: "Commissioner Login", to: "/login?dept=municipality&role=commissioner" },
+        { label: "Executive Officer Login", to: "/login?dept=municipality&role=executive_officer" },
+        { label: "Ward Inspector Login", to: "/login?dept=municipality&role=ward_inspector" },
       ],
     },
     {
       label: "Electricity Department",
+      department: "electricity_department",
       submenu: [
-        { label: "Top Level Officer", to: "/login" },
-        { label: "Middle Level Officer" },
-        { label: "Ground Level Officer" },
+        { label: "Chief Engineer Login", to: "/login?dept=electricity_department&role=chief_engineer" },
+        { label: "Executive Engineer Login", to: "/login?dept=electricity_department&role=executive_engineer" },
+        { label: "Junior Engineer Login", to: "/login?dept=electricity_department&role=junior_engineer" },
       ],
     },
     {
-      label: "Development Authority",
+      label: "Development Authority", 
+      department: "development_authority",
       submenu: [
-        { label: "Top Level Officer", to: "/login" },
-        { label: "Middle Level Officer" },
-        { label: "Ground Level Officer" },
+        { label: "Vice Chairman Login", to: "/login?dept=development_authority&role=vice_chairman" },
+        { label: "Planning Officer Login", to: "/login?dept=development_authority&role=planning_officer" },
+        { label: "Site Inspector Login", to: "/login?dept=development_authority&role=site_inspector" },
       ],
     },
   ];
@@ -90,7 +93,11 @@ function Navbar() {
 
         {/* Digital India Logo */}
         <div className="z-10 mr-10">
-          <img src="/digi.svg" alt="Digital India Logo" className="h-10 w-auto" />
+          <img
+            src="/digi.svg"
+            alt="Digital India Logo"
+            className="h-10 w-auto"
+          />
         </div>
       </div>
 
@@ -130,7 +137,9 @@ function Navbar() {
                                  transition-colors duration-200 rounded-md"
                     >
                       {sub.to ? (
-                        <Link to={sub.to} className="block w-full h-full">{sub.label}</Link>
+                        <Link to={sub.to} className="block w-full h-full">
+                          {sub.label}
+                        </Link>
                       ) : (
                         sub.label
                       )}
