@@ -1,0 +1,124 @@
+{
+  "districts": [
+    {
+      "id": "ranchi",
+      "name": "Ranchi",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "dhanbad", 
+      "name": "Dhanbad",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "jamshedpur",
+      "name": "Jamshedpur", 
+      "state": "Jharkhand"
+    },
+    {
+      "id": "bokaro",
+      "name": "Bokaro",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "deoghar",
+      "name": "Deoghar",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "hazaribagh",
+      "name": "Hazaribagh", 
+      "state": "Jharkhand"
+    },
+    {
+      "id": "giridih",
+      "name": "Giridih",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "palamu",
+      "name": "Palamu",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "garhwa", 
+      "name": "Garhwa",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "singhbhum_east",
+      "name": "East Singhbhum",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "singhbhum_west",
+      "name": "West Singhbhum",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "saraikela_kharsawan",
+      "name": "Saraikela Kharsawan",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "simdega",
+      "name": "Simdega",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "gumla",
+      "name": "Gumla",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "lohardaga",
+      "name": "Lohardaga",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "chatra",
+      "name": "Chatra",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "koderma",
+      "name": "Koderma",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "jamtara",
+      "name": "Jamtara",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "dumka",
+      "name": "Dumka",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "pakur",
+      "name": "Pakur",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "godda",
+      "name": "Godda",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "sahibganj",
+      "name": "Sahibganj",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "khunti",
+      "name": "Khunti",
+      "state": "Jharkhand"
+    },
+    {
+      "id": "ramgarh",
+      "name": "Ramgarh",
+      "state": "Jharkhand"
+    }
+  ]
+}
