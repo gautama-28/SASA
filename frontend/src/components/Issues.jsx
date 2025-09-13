@@ -1,201 +1,276 @@
-import React, { useMemo, useState } from "react";
-import data from "../data/issues.json";
+import React, { useMemo, useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-// -------- Helpers --------
-function formatDate(iso) {
-  const d = new Date(iso);
+// ----------------- Helpers -----------------
+const formatDate = (iso) => {
   try {
-    return d.toLocaleDateString("en-GB", {
+    return new Date(iso).toLocaleDateString("en-GB", {
       day: "2-digit",
-      month: "short",
-      year: "numeric",
+      month: "short", 
+      year: "numeric"
     });
   } catch {
     return iso;
   }
-}
+};
 
-function statusPillClasses(status) {
-  switch (status) {
-    case "Completed":
-      return "bg-emerald-100 text-emerald-700";
-    case "Processing":
-      return "bg-violet-100 text-violet-700";
-    case "Rejected":
-    default:
-      return "bg-rose-100 text-rose-700";
-  }
-}
-
-function priorityTextClasses(priority) {
+const priorityTextClasses = (priority) => {
   switch (priority) {
     case "Highest":
-      return "text-rose-600 font-bold";
+      return "text-red-700 font-semibold";
+    case "High":
+      return "text-orange-700";
     case "Medium":
-      return "text-orange-600";
+      return "text-yellow-700";
     case "Low":
-    default:
       return "text-green-700";
+    default:
+      return "text-gray-700";
   }
-}
+};
 
-function makeSvgIcon(color = "#e11d48") {
-  const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="48" viewBox="0 0 24 36">
-      <path d="M12 0C7 0 3 4 3 9c0 7 9 20.6 9 20.6S21 16 21 9c0-5-4-9-9-9z" fill="${color}"/>
-      <circle cx="12" cy="9" r="3.2" fill="#ffffff"/>
-    </svg>`;
-  return new L.Icon({
-    iconUrl: "data:image/svg+xml;utf8," + encodeURIComponent(svg),
-    iconSize: [34, 48],
-    iconAnchor: [17, 48],
-    popupAnchor: [0, -44],
+const statusPillClasses = (status) => {
+  switch (status) {
+    case "Processing":
+      return "border-blue-200 bg-blue-50 text-blue-700";
+    case "Completed":
+      return "border-green-200 bg-green-50 text-green-700";
+    case "Rejected":
+      return "border-red-200 bg-red-50 text-red-700";
+    default:
+      return "border-gray-200 bg-gray-50 text-gray-700";
+  }
+};
+
+const priorityColor = (priority) => {
+  switch (priority) {
+    case "Highest":
+      return "#EF4444"; // red
+    case "High":
+      return "#F59E0B"; // orange
+    case "Medium":
+      return "#FBBF24"; // yellow
+    case "Low":
+      return "#10B981"; // green
+    default:
+      return "#6B7280"; // gray
+  }
+};
+
+// Creates a custom SVG icon for Leaflet
+const makeSvgIcon = (color) =>
+  L.divIcon({
+    className: "",
+    html: `
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+        <circle cx="12" cy="12" r="10" fill="${color}" stroke="#000" stroke-width="1"/>
+      </svg>
+    `,
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
   });
-}
 
-function priorityColor(priority) {
-  if (!priority) return "#6b7280";
-  const p = priority.toLowerCase();
-  if (p === "highest") return "#dc2626";
-  if (p === "medium") return "#f97316";
-  return "#10b981";
-}
-
-// -------- Main Component --------
+// ----------------- Main Component -----------------
 export default function Issues() {
-  const { labels, rows } = data;
+  const [data, setData] = useState({ labels: {}, rows: [] });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [showAll, setShowAll] = useState(false);
 
-  const visibleRows = useMemo(
-    () => (showAll ? rows : rows.slice(0, 5)),
-    [rows, showAll]
+  useEffect(() => {
+    const fetchIssues = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const response = await fetch("http://localhost:5000/api/issues");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        setData(result);
+      } catch (err) {
+        console.error("Error fetching issues:", err);
+        setError(err.message);
+        setData({ 
+          labels: { 
+            id: "ID", 
+            subject: "Subject", 
+            address: "Address", 
+            date: "Date", 
+            priority: "Priority", 
+            status: "Status" 
+          }, 
+          rows: [] 
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchIssues();
+  }, []);
+
+  const issues = useMemo(() => data.rows || [], [data]);
+  const displayed = useMemo(() => 
+    showAll ? issues : issues.slice(0, 6), 
+    [issues, showAll]
   );
 
-  // Find map center
-  const center = useMemo(() => {
-    const found = rows.find((r) => r.lat && r.lng);
-    if (found) return [Number(found.lat), Number(found.lng)];
-    return [23.3441, 85.3096]; // fallback (Ranchi, Jharkhand example)
-  }, [rows]);
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-lg font-medium text-gray-700">Loading issues...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center p-8 bg-red-50 rounded-lg border border-red-200">
+          <p className="text-lg font-medium text-red-800 mb-2">Error Loading Issues</p>
+          <p className="text-red-600">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <section className="w-full mt-6 px-4 sm:px-8 lg:px-16 space-y-8">
-      {/* ---------- Table ---------- */}
-      <div className="overflow-hidden rounded-xl border border-gray-300 bg-white shadow-lg">
-        <table className="min-w-full table-auto text-sm">
-          <thead className="bg-gradient-to-r from-orange-600 to-orange-500 shadow-md">
-            <tr>
-              {Object.values(labels).map((label, i) => (
-                <th
-                  key={i}
-                  className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-white"
-                >
-                  {label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {visibleRows.map((r, idx) => (
-              <tr
-                key={`${r.id}-${idx}`}
-                className="border-b border-gray-200 odd:bg-gray-50 hover:bg-orange-50 transition-colors"
-              >
-                <td className="px-6 py-4 font-mono text-gray-800">{r.id}</td>
-                <td className="px-6 py-4 font-medium text-gray-900">
-                  {r.subject}
-                </td>
-                <td className="px-6 py-4 text-gray-700">{r.address}</td>
-                <td className="px-6 py-4 text-gray-600">
-                  {formatDate(r.date)}
-                </td>
-                <td className={`px-6 py-4 ${priorityTextClasses(r.priority)}`}>
-                  <span className="inline-block rounded-lg border px-2 py-1 text-xs">
-                    {r.priority}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <span
-                    className={`inline-flex rounded-full px-3 py-1 text-xs font-medium border ${statusPillClasses(
-                      r.status
-                    )}`}
-                  >
-                    {r.status}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <button
-                    type="button"
-                    className="inline-flex items-center gap-1 rounded-md border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 hover:bg-indigo-100"
-                  >
-                    View Report
-                    <img
-                      src="./doublearrow.svg"
-                      alt="arrow"
-                      className="w-4 h-4"
-                    />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* ---------- Map ---------- */}
-      <div className="py-2">
-        <h2 className="text-lg font-bold text-gray-900">Issue Heatmap</h2>
-        <p className="text-sm text-gray-600">
-          Explore reported issues across the city at a glance.
+    <section className="py-12 px-4 sm:px-8 lg:px-16 space-y-12">
+      {/* Header */}
+      <div className="text-center space-y-4">
+        <h1 className="text-4xl font-bold text-gray-900">
+          Municipal <span className="text-blue-600">Issues</span>
+        </h1>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          Track and monitor all reported municipal issues across the city.
         </p>
       </div>
 
-      <div className="rounded-xl border border-gray-200 bg-white shadow-lg">
-        <div className="relative w-full" style={{ height: "420px" }}>
-          <MapContainer
-            center={center}
-            zoom={13}
-            scrollWheelZoom={false}
-            style={{ height: "100%", width: "100%" }}
-            className="rounded-b-xl z-0"
-          >
-            <TileLayer
-              attribution="&copy; OpenStreetMap contributors"
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {rows.map((r, idx) => {
-              if (!r.lat || !r.lng) return null;
-              const pos = [Number(r.lat), Number(r.lng)];
-              const color = priorityColor(r.priority);
-              const icon = makeSvgIcon(color);
-              return (
-                <Marker key={`${r.id ?? idx}`} position={pos} icon={icon}>
-                  <Popup>
-                    <div style={{ minWidth: 160 }}>
-                      <strong style={{ display: "block", marginBottom: 6 }}>
-                        {r.subject}
-                      </strong>
-                      <div style={{ fontSize: 13, color: "#374151" }}>
-                        {r.address}
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {['Total', 'Processing', 'Completed', 'Rejected'].map((label) => {
+          const count = label === 'Total' 
+            ? issues.length
+            : issues.filter(issue => issue.status === label).length;
+          
+          return (
+            <div key={label} className="bg-white p-6 rounded-lg shadow-md border">
+              <div className="text-2xl font-bold text-blue-600">{count}</div>
+              <div className="text-gray-600">{label} Issues</div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Map */}
+      {issues.length > 0 && (
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Issues Map</h2>
+          <div className="h-96 rounded-lg overflow-hidden">
+            <MapContainer
+              center={[23.3441, 85.3096]}
+              zoom={13}
+              style={{ height: "100%", width: "100%" }}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              {issues
+                .filter(issue => issue.lat && issue.lng)
+                .map((issue) => (
+                  <Marker
+                    key={issue.id}
+                    position={[issue.lat, issue.lng]}
+                    icon={makeSvgIcon(priorityColor(issue.priority))}
+                  >
+                    <Popup>
+                      <div className="p-2">
+                        <h3 className="font-semibold text-lg">{issue.subject}</h3>
+                        <p className="text-sm text-gray-600 mb-2">{issue.address}</p>
+                        <div className="flex justify-between items-center">
+                          <span className={`text-sm font-medium ${priorityTextClasses(issue.priority)}`}>
+                            {issue.priority} Priority
+                          </span>
+                          <span className={`px-2 py-1 rounded-full text-xs border ${statusPillClasses(issue.status)}`}>
+                            {issue.status}
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {formatDate(issue.date)}
+                        </p>
                       </div>
-                      <div
-                        style={{ marginTop: 6, fontSize: 12, color: "#6b7280" }}
-                      >
-                        Priority:{" "}
-                        <span style={{ color }}>{r.priority ?? "—"}</span>
-                        <br />
-                        Status: {r.status ?? "—"}
-                      </div>
-                    </div>
-                  </Popup>
-                </Marker>
-              );
-            })}
-          </MapContainer>
+                    </Popup>
+                  </Marker>
+                ))}
+            </MapContainer>
+          </div>
         </div>
+      )}
+
+      {/* Issues List */}
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Recent Issues</h2>
+        
+        {issues.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-lg text-gray-500">No issues found</p>
+          </div>
+        ) : (
+          <>
+            <div className="grid gap-6">
+              {displayed.map((issue) => (
+                <div key={issue.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div className="flex justify-between items-start mb-3">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">{issue.subject}</h3>
+                      <p className="text-gray-600">{issue.address}</p>
+                    </div>
+                    <div className="text-right">
+                      <span className={`px-3 py-1 rounded-full text-sm border ${statusPillClasses(issue.status)}`}>
+                        {issue.status}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between items-center text-sm">
+                    <span className={`font-medium ${priorityTextClasses(issue.priority)}`}>
+                      {issue.priority} Priority
+                    </span>
+                    <span className="text-gray-500">
+                      ID: {issue.id} • {formatDate(issue.date)}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {issues.length > 6 && (
+              <div className="mt-8 text-center">
+                <button
+                  onClick={() => setShowAll(!showAll)}
+                  className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  {showAll ? 'Show Less' : `Show All (${issues.length} total)`}
+                </button>
+              </div>
+            )}
+          </>
+        )}
       </div>
     </section>
   );

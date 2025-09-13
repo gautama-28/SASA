@@ -1,0 +1,20 @@
+{
+  "reports": [
+    { "id": "00001", "description": "Standing water causing mosquito breeding and traffic issues.", "assistantEngineer": "Ashok Kumar", "juniorEngineer": "Suraj Verma" },
+    { "id": "00002", "description": "Streetlight circuit damaged; stretch unsafe at night.", "assistantEngineer": "Neha Singh", "juniorEngineer": "Ravi Mehra" },
+    { "id": "00003", "description": "Multiple deep potholes slowing traffic; risk of accidents.", "assistantEngineer": "Ashok Kumar", "juniorEngineer": "Pooja Das" },
+    { "id": "00004", "description": "Garbage pickup delayed by 3 days; foul smell reported.", "assistantEngineer": "Vikram Patel", "juniorEngineer": "Arjun Yadav" },
+    { "id": "00005", "description": "Blocked drain near market; water overflow during rains.", "assistantEngineer": "Neha Singh", "juniorEngineer": "Aarti Sinha" },
+    { "id": "00006", "description": "Unregulated parking causing lane blockage in peak hours.", "assistantEngineer": "Ashok Kumar", "juniorEngineer": "Suraj Verma" },
+    { "id": "00007", "description": "Public dustbin overflowing; needs additional collection run.", "assistantEngineer": "Vikram Patel", "juniorEngineer": "Pooja Das" },
+    { "id": "00008", "description": "Open manhole near crossing; immediate safety hazard.", "assistantEngineer": "Neha Singh", "juniorEngineer": "Ravi Mehra" },
+    { "id": "00009", "description": "Broken tiles on footpath impede pedestrians and elderly.", "assistantEngineer": "Ashok Kumar", "juniorEngineer": "Aarti Sinha" },
+    { "id": "00010", "description": "Garbage dump next to playground; requires cleanup.", "assistantEngineer": "Vikram Patel", "juniorEngineer": "Arjun Yadav" },
+    { "id": "00011", "description": "Severe waterlogging reported post heavy rains.", "assistantEngineer": "Neha Singh", "juniorEngineer": "Suraj Verma" },
+    { "id": "00012", "description": "Streetlight transformer fault; area pitch dark at night.", "assistantEngineer": "Ashok Kumar", "juniorEngineer": "Pooja Das" },
+    { "id": "00013", "description": "Recurring potholes after patchwork; needs resurfacing.", "assistantEngineer": "Vikram Patel", "juniorEngineer": "Ravi Mehra" },
+    { "id": "00014", "description": "Unauthorized garbage burning; air quality concerns.", "assistantEngineer": "Neha Singh", "juniorEngineer": "Aarti Sinha" },
+    { "id": "00015", "description": "Shop encroachment onto footpath; pedestrian safety risk.", "assistantEngineer": "Ashok Kumar", "juniorEngineer": "Arjun Yadav" },
+    { "id": "00016", "description": "Drainage overflow due to silt; desilting required.", "assistantEngineer": "Vikram Patel", "juniorEngineer": "Suraj Verma" }
+  ]
+}
