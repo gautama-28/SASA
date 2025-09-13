@@ -139,7 +139,7 @@ function Analytics() {
               <img src="/TotalSolved.svg" alt="Total Solved" className="h-12 w-12" />
             </div>
             <p className="font-lato text-[11px] text-gray-500">Total Solved</p>
-            <div className="font-ubuntu text-xl font-bold text-gray-900">$89,000</div>
+            <div className="font-ubuntu text-xl font-bold text-gray-900">89,000</div>
             <div className="mt-2 flex items-center gap-1">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3 rotate-180 text-rose-600"><path fillRule="evenodd" d="M10 3a.75.75 0 01.75.75V14a.75.75 0 01-1.5 0V3.75A.75.75 0 0110 3zm0 0l3.5 3.5a.75.75 0 11-1.06 1.06L10 5.06 7.56 7.56a.75.75 0 11-1.06-1.06L10 3z" clipRule="evenodd"/></svg>
               <span className="text-[11px] font-medium text-rose-600">4.3% Down</span>
