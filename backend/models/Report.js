@@ -1,35 +1,20 @@
-// backend/routes/reports.js
-const express = require("express");
-const router = express.Router();
+// models/Report.js
+import mongoose from "mongoose";
 
-// Sample data (replace with database query if needed)
-const reports = [
-  {
-    id: "R001",
-    subject: "Street light not working",
-    address: "MG Road, City",
-    date: "2025-09-10T10:30:00Z",
-    priority: "High",
-    status: "Processing",
-    assistantEngineer: "John Doe",
-    juniorEngineer: "Jane Smith",
-    description: "Street light near MG Road not working since 3 days",
-  },
-  {
-    id: "R002",
-    subject: "Pothole on Main Street",
-    address: "Main Street, City",
-    date: "2025-09-08T09:15:00Z",
-    priority: "Medium",
-    status: "Completed",
-    assistantEngineer: "Alice",
-    juniorEngineer: "Bob",
-    description: "Large pothole on Main Street repaired",
-  },
-];
-
-router.get("/", (req, res) => {
-  res.json({ reports }); // send data in JSON format
+const reportSchema = new mongoose.Schema({
+  id: { type: String, required: true, unique: true },
+  title: { type: String }, // You can map 'subject' from issues.json to 'title' here
+  description: { type: String, required: true },
+  priority: { type: String, enum: ["Low", "Medium", "High", "Highest"], default: "Low" },
+  status: { type: String, enum: ["Open", "Processing", "In Progress", "Resolved", "Completed", "Rejected"], default: "Open" },
+  address: { type: String },
+  date: { type: Date },
+  lat: { type: Number },
+  lng: { type: Number },
+  assistantEngineer: { type: String },
+  juniorEngineer: { type: String },
+  createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = router;
+const Report = mongoose.model("Report", reportSchema);
+export default Report;

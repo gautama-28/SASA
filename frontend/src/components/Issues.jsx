@@ -1,85 +1,104 @@
-import React, { useMemo, useState } from "react";
-import data from "../data/issues.json";
+import React, { useMemo, useState, useEffect } from "react";
+import axios from "axios";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-// -------- Helpers --------
-function formatDate(iso) {
-  const d = new Date(iso);
-  try {
-    return d.toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-  } catch {
-    return iso;
-  }
-}
+// ----------------- Helpers -----------------
+const formatDate = (iso) => new Date(iso).toLocaleDateString();
 
-function statusPillClasses(status) {
-  switch (status) {
-    case "Completed":
-      return "bg-emerald-100 text-emerald-700";
-    case "Processing":
-      return "bg-violet-100 text-violet-700";
-    case "Rejected":
-    default:
-      return "bg-rose-100 text-rose-700";
-  }
-}
-
-function priorityTextClasses(priority) {
+const priorityTextClasses = (priority) => {
   switch (priority) {
     case "Highest":
-      return "text-rose-600 font-bold";
+      return "text-red-700";
+    case "High":
+      return "text-orange-700";
     case "Medium":
-      return "text-orange-600";
+      return "text-yellow-700";
     case "Low":
-    default:
       return "text-green-700";
+    default:
+      return "text-gray-700";
   }
-}
+};
 
-function makeSvgIcon(color = "#e11d48") {
-  const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="48" viewBox="0 0 24 36">
-      <path d="M12 0C7 0 3 4 3 9c0 7 9 20.6 9 20.6S21 16 21 9c0-5-4-9-9-9z" fill="${color}"/>
-      <circle cx="12" cy="9" r="3.2" fill="#ffffff"/>
-    </svg>`;
-  return new L.Icon({
-    iconUrl: "data:image/svg+xml;utf8," + encodeURIComponent(svg),
-    iconSize: [34, 48],
-    iconAnchor: [17, 48],
-    popupAnchor: [0, -44],
+const statusPillClasses = (status) => {
+  switch (status) {
+    case "Processing":
+      return "border-blue-200 bg-blue-50 text-blue-700";
+    case "Completed":
+      return "border-green-200 bg-green-50 text-green-700";
+    case "Rejected":
+      return "border-red-200 bg-red-50 text-red-700";
+    default:
+      return "border-gray-200 bg-gray-50 text-gray-700";
+  }
+};
+
+const priorityColor = (priority) => {
+  switch (priority) {
+    case "Highest":
+      return "#EF4444"; // red
+    case "High":
+      return "#F59E0B"; // orange
+    case "Medium":
+      return "#FBBF24"; // yellow
+    case "Low":
+      return "#10B981"; // green
+    default:
+      return "#6B7280"; // gray
+  }
+};
+
+// Creates a custom SVG icon for Leaflet
+const makeSvgIcon = (color) =>
+  L.divIcon({
+    className: "",
+    html: `
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+        <circle cx="12" cy="12" r="10" fill="${color}" stroke="#000" stroke-width="1"/>
+      </svg>
+    `,
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
   });
-}
 
-function priorityColor(priority) {
-  if (!priority) return "#6b7280";
-  const p = priority.toLowerCase();
-  if (p === "highest") return "#dc2626";
-  if (p === "medium") return "#f97316";
-  return "#10b981";
-}
-
-// -------- Main Component --------
+// ----------------- Main Component -----------------
 export default function Issues() {
-  const { labels, rows } = data;
+  const [data, setData] = useState({ labels: {}, rows: [] });
+  const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
+
+  useEffect(() => {
+    const fetchIssues = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/issues");
+        console.log("Fetched issues:", res.data); // debugging
+        setData(res.data);
+      } catch (err) {
+        console.error("Error fetching issues:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchIssues();
+  }, []);
+
+  const { labels, rows } = data;
 
   const visibleRows = useMemo(
     () => (showAll ? rows : rows.slice(0, 5)),
     [rows, showAll]
   );
 
-  // Find map center
   const center = useMemo(() => {
     const found = rows.find((r) => r.lat && r.lng);
     if (found) return [Number(found.lat), Number(found.lng)];
-    return [23.3441, 85.3096]; // fallback (Ranchi, Jharkhand example)
+    return [23.3441, 85.3096]; // fallback to Ranchi
   }, [rows]);
+
+  if (loading) return <p className="text-center py-10">Loading issues...</p>;
 
   return (
     <section className="w-full mt-6 px-4 sm:px-8 lg:px-16 space-y-8">
@@ -105,13 +124,9 @@ export default function Issues() {
                 className="border-b border-gray-200 odd:bg-gray-50 hover:bg-orange-50 transition-colors"
               >
                 <td className="px-6 py-4 font-mono text-gray-800">{r.id}</td>
-                <td className="px-6 py-4 font-medium text-gray-900">
-                  {r.subject}
-                </td>
+                <td className="px-6 py-4 font-medium text-gray-900">{r.subject}</td>
                 <td className="px-6 py-4 text-gray-700">{r.address}</td>
-                <td className="px-6 py-4 text-gray-600">
-                  {formatDate(r.date)}
-                </td>
+                <td className="px-6 py-4 text-gray-600">{formatDate(r.date)}</td>
                 <td className={`px-6 py-4 ${priorityTextClasses(r.priority)}`}>
                   <span className="inline-block rounded-lg border px-2 py-1 text-xs">
                     {r.priority}
@@ -132,17 +147,24 @@ export default function Issues() {
                     className="inline-flex items-center gap-1 rounded-md border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 hover:bg-indigo-100"
                   >
                     View Report
-                    <img
-                      src="./doublearrow.svg"
-                      alt="arrow"
-                      className="w-4 h-4"
-                    />
+                    <img src="./doublearrow.svg" alt="arrow" className="w-4 h-4" />
                   </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+
+        {rows.length > 5 && (
+          <div className="p-4 text-center">
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="px-4 py-2 rounded bg-orange-500 text-white hover:bg-orange-600"
+            >
+              {showAll ? "Show Less" : "Show All"}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ---------- Map ---------- */}
@@ -181,11 +203,8 @@ export default function Issues() {
                       <div style={{ fontSize: 13, color: "#374151" }}>
                         {r.address}
                       </div>
-                      <div
-                        style={{ marginTop: 6, fontSize: 12, color: "#6b7280" }}
-                      >
-                        Priority:{" "}
-                        <span style={{ color }}>{r.priority ?? "—"}</span>
+                      <div style={{ marginTop: 6, fontSize: 12, color: "#6b7280" }}>
+                        Priority: <span style={{ color }}>{r.priority ?? "—"}</span>
                         <br />
                         Status: {r.status ?? "—"}
                       </div>

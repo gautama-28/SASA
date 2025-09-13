@@ -95,8 +95,8 @@ export default function Reports() {
           actions: "Actions",
         };
 
-        setData({ labels, rows: result.reports });
-        setDetails({ reports: result.reports });
+        setData({ labels, rows: result.rows });
+        setDetails({ reports: result.rows });
         setLoading(false);
       } catch (err) {
         console.error("Failed to fetch reports:", err);
